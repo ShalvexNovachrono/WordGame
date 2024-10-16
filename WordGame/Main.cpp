@@ -5,20 +5,27 @@ using namespace std;
 
 class Extra {
 	public:
-		void print(string message);
+		void print(string message, int mode);
 
-		string GetStringInput(string message) {
-            cout << message;
-			string Input;
-			getline(cin, Input);
-			return Input;
-		}
+        string GetStringInput(string message);
 
         int RangeIntInput(int Min, int Max, string message);
 };
 
-void Extra::print(string message) {
-	cout << message << endl;
+void Extra::print(string message, int mode = 0) {
+    if (mode == 0) {
+        cout << message << endl;
+    }
+    else {
+        cout << message;
+    }
+}
+
+string Extra::GetStringInput(string message) {
+    print(message, 1);
+    string Input;
+    getline(cin, Input);
+    return Input;
 }
 
 int Extra::RangeIntInput(int Min, int Max, string message) { // this input function will only return number when it meets the requirement
@@ -63,12 +70,27 @@ class EnemyArray {
         vector<Enemy> TheEnemyArray;
         int ID = 0;
         void AddEnemy(Enemy newEnemy);
+        int GetArrayLength();
+        Enemy GetElementFromThisIndex(int Index);
+        void DeleteElement(int Index);
 };
 
 void EnemyArray::AddEnemy(Enemy newEnemy) {
     this->ID++;
     newEnemy.ID = this->ID;
     TheEnemyArray.push_back(newEnemy);
+}
+
+int EnemyArray::GetArrayLength() {
+    return this->TheEnemyArray.size();
+}
+
+Enemy EnemyArray::GetElementFromThisIndex(int Index = 0) {
+    return this->TheEnemyArray[Index];
+}
+
+void EnemyArray::DeleteElement(int Index = 0) {
+    this->TheEnemyArray.erase(next(this->TheEnemyArray.begin(), Index));
 }
 
 int main() {
@@ -82,6 +104,9 @@ int main() {
 
     Enemy newEnemy3(30, "Goblin", 100, 40);
     enemyArray.AddEnemy(newEnemy3);
+
+    enemyArray.DeleteElement(2);
+
 
     for (auto enemy : enemyArray.TheEnemyArray) {
         cout << "Name: " << enemy.Name << endl;
