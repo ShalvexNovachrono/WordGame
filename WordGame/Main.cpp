@@ -30,7 +30,7 @@ public:
         this->ThisSkillBestWorksOnThisTypeOfEnemy.push_back(WorksBestOn);
     }
 
-    float GetTheDamageDealt(string type) {
+    float GetTheDamageDealt(string type = "none") {
         float ExtraDamage = FindSkillBestWorksOnThisType(type);
 
         return SkillDamage + ExtraDamage;
@@ -38,7 +38,7 @@ public:
 private:
     float FindSkillBestWorksOnThisType(string type) {
         for (auto worksOn : this->ThisSkillBestWorksOnThisTypeOfEnemy) {
-            if (worksOn.Type == type) {
+            if (worksOn.Type == type || type == "All") {
                 float AnotherExtraDamage = 0;
                 int RandomOne = RandomInt(0, 20);
                 if (RandomOne >= 10) {
@@ -63,6 +63,7 @@ class Enemy {
         string Type;
         float CurrentDamageTaken = 0;
         float Damage;
+        vector<Skill> TheSkillsOfMine;
 
         Enemy (int Points, string Name, string Type, float MaxHealth, float Damage) {
             this->Points = Points;
@@ -73,7 +74,17 @@ class Enemy {
             this->Damage = Damage;
         }
 
+        void AddSkills(Skill skill) {
+            this->TheSkillsOfMine.push_back(skill);
+        }
+
         bool IsDead();
+
+        int ReturnAttackDamage() {
+            int Index = RandomInt(0, this->TheSkillsOfMine.size());
+            int Damage = TheSkillsOfMine[Index].GetTheDamageDealt();
+            return Damage + this->Damage;
+        }
 };
 
 bool Enemy::IsDead() {
@@ -115,20 +126,44 @@ void EnemyArray::UpdateEnemyHealth(int Index, int DamageTaken) {
 int main() {
     EnemyArray enemyArray;
 
-    Enemy SlimeEnemy(2, "Slime", "Water", 5, 1);
+    Enemy SlimeEnemy(2, "Slime of Purity", "Water", 5, 1);
+    Skill TheSkill;
+    TheSkill.SkillName = "Water Slash";
+    TheSkill.SkillDamage = 2;
+    TheSkill.ProbabilityOfHit = 5;
+    SlimeEnemy.AddSkills(TheSkill);
+    TheSkill.SkillName = "Water Shot";
+    TheSkill.SkillDamage = 1;
+    TheSkill.ProbabilityOfHit = 7;
+    SlimeEnemy.AddSkills(TheSkill);
     enemyArray.AddEnemy(SlimeEnemy);
 
-    Enemy WolfEnemy(10, "Wolf", "Monster", 100, 3);
+    Enemy SnakeEnemy(3, "Water Snake of Greed", "Water", 3, 3);
+    TheSkill.SkillName = "Water Shot";
+    TheSkill.SkillDamage = 1;
+    TheSkill.ProbabilityOfHit = 7;
+    SnakeEnemy.AddSkills(TheSkill);
+    enemyArray.AddEnemy(SnakeEnemy);
+
+    Enemy WolfEnemy(10, "Demon Wolf of Pride", "Monster", 100, 3);
     enemyArray.AddEnemy(WolfEnemy);
 
-    Enemy GoblinEnemy(30, "Goblin", "Humanoid", 100, 40);
+    Enemy GoblinEnemy(30, "Demon Goblin of Lust and Fury/Wrath", "Humanoid", 100, 40);
     enemyArray.AddEnemy(GoblinEnemy);
 
-    Enemy TrollEnemy(5, "Troll", "Humanoid", 100, 60);
+    Enemy TrollEnemy(5, "Troll Demon of Greed and Gluttony", "Humanoid", 100, 60);
     enemyArray.AddEnemy(TrollEnemy);
 
-    Enemy WitchEnemy(100, "Witch", "Fire", 25, 100);
+    Enemy WitchEnemy(100, "Demon Witch of Flames", "Fire", 25, 100);
     enemyArray.AddEnemy(WitchEnemy);
+
+    Enemy DragonEnemy(100, "Fire Dragon of Sloth", "Fire", 520, 400);
+    enemyArray.AddEnemy(DragonEnemy);
+
+    Enemy HydraEnemy(100, "Hydra Snake of Envy", "Water", 520, 430);
+    enemyArray.AddEnemy(DragonEnemy);
+
+
 
     //enemyArray.DeleteElement(2);
 
