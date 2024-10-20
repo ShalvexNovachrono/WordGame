@@ -9,5 +9,9 @@ public:
 
     string GetStringInput(string message);
 
-    int RangeIntInput(int Min, int Max, string message);
+    int RangeNumberInput(int Min, int Max, string message);
+    float RangeNumberInput(float Min, float Max, string message);
+    double RangeNumberInput(double Min, double Max, string message);
+    string RangeInput(int Min, int Max, string message);
+
 };
